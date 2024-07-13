@@ -2,32 +2,45 @@
   hosts: all
   vars:
     ansible_python_interpreter: /usr/bin/python3
-
   roles:
     - role: users
-      become: yes
+      become: true
       tags: users
 
     - role: ssh
-      become: yes
+      become: true
       tags: ssh
 
     - role: zsh
-      tags: zsh
+      tags:
+        - zsh
+        - never
 
     - role: nvim
-      tags: nvim
+      tags:
+        - nvim
+        - never
 
     - role: python
       tags: python
 
+- name: bootstrap
+  hosts: networking
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+  roles:
     - role: tailscale
       tags: tailscale
 
     - role: certbot
-      become: yes
+      become: true
       tags: certbot
 
     - role: nginx
-      become: yes
+      become: true
       tags: nginx
+
+    - role: ufw
+      become: true
+      tags: ufw

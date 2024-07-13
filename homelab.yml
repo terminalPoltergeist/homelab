@@ -1,23 +1,45 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+---
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # network servers
 #
 # This group contains infrastructure for edge and local
 # networks, private proxying, firewalls, etc.
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
----
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 networking:
   hosts:
     brunelli:
     moxy:
 
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # container infrastructure
 #
 # This group contains Docker cluster hosts.
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 containers:
   hosts:
     carlyle:
     nassau:
     oasis:
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# on-prem infrastructure
+#
+# This group contains all hosts in the local infrastructure.
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+on_prem:
+  hosts:
+    carlyle:
+    moxy:
+    nassau:
+    oasis:
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# cloud infrastructure
+#
+# This group contains all hosts in cloud infrastructure.
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+cloud:
+  hosts:
+    aristotle:
+    brunelli:
