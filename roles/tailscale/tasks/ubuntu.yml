@@ -1,0 +1,11 @@
+- name: Check for Tailscale
+  ansible.builtin.shell:
+    cmd: tailscale --version
+  register: tailscale
+  failed_when: false
+  changed_when: tailscale.rc != 0
+
+- name: Install Tailscale agent
+  when: tailscale.rc != 0
+  ansible.builtin.shell:
+    cmd: curl -fsSL https://tailscale.com/install.sh | sh

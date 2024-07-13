@@ -1,0 +1,6 @@
+- name: "Config for Ubuntu/Debian"
+  ansible.builtin.include_tasks: ubuntu.yml
+  when: ansible_os_family == "Debian"
+- name: "Config for Fedora39"
+  ansible.builtin.include_tasks: fedora39.yml
+  when: ansible_os_family == "RedHat"

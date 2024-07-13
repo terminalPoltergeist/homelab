@@ -1,0 +1,43 @@
+- name: Update packages
+  ansible.builtin.apt:
+    upgrade: true
+    update_cache: true
+    cache_valid_time: 86400
+
+- name: Install pip3
+  ansible.builtin.apt:
+    name: "python3-pip"
+    state: present
+
+- name: Install certbot and extensions
+  ansible.builtin.apt:
+    name:
+      - python3-certbot
+      - python3-zope.interface>=5.3.0a1
+      - python3-certbot-dns-cloudflare
+
+- name: Create /etc/letsencrypt
+  ansible.builtin.file:
+    path: "/etc/letsencrypt"
+    state: directory
+    recurse: true
+
+- name: Check for cloudflare.ini
+  ansible.builtin.stat:
+    path: /etc/letsencrypt/cloudflare.ini
+  register: cloudflare
+
+- name: Copy cloudflare.ini
+  when: not cloudflare.stat.exists
+  ansible.builtin.template:
+    src: "cloudflare.ini.j2"
+    dest: "/etc/letsencrypt/cloudflare.ini"
+    owner: root
+    mode: '0600'
+
+- name: Do renew dry run
+  ansible.builtin.shell:
+    cmd: sudo certbot certonly --dry-run --dns-cloudflare --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini -d "{{ certbot_domain }}" -d "*.{{ certbot_domain }}" -m {{ certbot_email }}
+  register: dry_run
+  failed_when: dry_run.rc != 0
+  changed_when: false

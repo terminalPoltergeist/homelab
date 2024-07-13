@@ -1,0 +1,33 @@
+- name: bootstrap
+  hosts: all
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+
+  roles:
+    - role: users
+      become: yes
+      tags: users
+
+    - role: ssh
+      become: yes
+      tags: ssh
+
+    - role: zsh
+      tags: zsh
+
+    - role: nvim
+      tags: nvim
+
+    - role: python
+      tags: python
+
+    - role: tailscale
+      tags: tailscale
+
+    - role: certbot
+      become: yes
+      tags: certbot
+
+    - role: nginx
+      become: yes
+      tags: nginx

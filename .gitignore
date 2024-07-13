@@ -1,0 +1,11 @@
+group_vars/*.yml
+host_vars/*.yml
+roles/**/vars
+roles/nginx/files/*
+!roles/nginx/files/*.md
+roles/nvim/files/*
+!roles/nvim/files/*.md
+roles/ssh/
+roles/users/
+roles/zsh/files/*
+!roles/zsh/files/*.md

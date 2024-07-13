@@ -1,0 +1,78 @@
+- name: Check for existing python3
+  ansible.builtin.shell:
+    cmd: python3 --version
+  register: python
+  changed_when: python.rc != 0
+
+- name: Setup Python3
+  when: python.rc != 0
+  block:
+    - name: Install dependencies
+      ansible.builtin.apt:
+        name:
+          - build-essential
+          - zlib1g-dev
+          - libncurses5-dev
+          - libgdbm-dev
+          - libnss3-dev
+          - libssl-dev
+          - libreadline-dev
+          - libffi-dev
+          - libsqlite3-dev
+          - wget
+          - libbz2-dev
+        state: present
+        update_cache: true
+      become: true
+
+    - name: Download Python source code
+      ansible.builtin.get_url:
+        url: https://www.python.org/ftp/python/3.11.3/Python-3.11.3.tgz
+        dest: /tmp/python3.11.3.tgz
+        mode: '0644'
+
+    - name: Unarchive
+      ansible.builtin.unarchive:
+        src: /tmp/python3.11.3.tgz
+        dest: /tmp/python3.11.3
+        remote_src: true
+
+    - name: Check dependencies
+      ansible.builtin.shell:
+        cmd: /tmp/python3.11.3/configure --enable-optimizations
+
+    - name: Make
+      ansible.builtin.shell:
+        cmd: cd /tmp/python3.11.3 && make
+
+- name: Check for pyenv
+  ansible.builtin.shell:
+    cmd: pyenv --version
+  register: pyenv
+  failed_when: false
+  changed_when: pyenv.rc != 0
+
+- name: Setup pyenv
+  when: pyenv.rc != 0
+  block:
+    - name: Install pyenv
+      when: pyenv.rc != 0
+      ansible.builtin.shell:
+        cmd: curl https://pyenv.run | bash
+
+    - name: Configure pyenv
+      ansible.builtin.shell:
+        cmd: |
+          export PYENV_ROOT="$HOME/.pyenv"
+          export PATH="$PYENV_ROOT/bin:$PATH"
+          export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+          eval "$(pyenv init --path)"
+          eval "$(pyenv init -)"
+
+    - name: Link the binary
+      ansible.builtin.file:
+        src: "{{ ansible_env.HOME }}/.pyenv/bin/pyenv"
+        dest: /usr/local/bin/pyenv
+        state: link
+        owner: "{{ ansible_user }}"
+      become: true
