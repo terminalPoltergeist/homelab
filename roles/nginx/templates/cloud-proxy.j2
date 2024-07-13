@@ -1,0 +1,35 @@
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Nginx edge reverse-proxy
+#
+# This server accepts public requests and proxies them to a local proxy
+# server using Tailscale
+#
+# It forces https and uses certs for the {{ base_domain }} domain
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# Redirect HTTP to HTTPS
+server{
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name wach.quest;
+    # this tells nginx to send http requests to https
+    return 301 https://$host$request_uri;
+}
+
+# forward all requests to the local server
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name *.{{ base_domain }};
+    ssl_certificate /etc/letsencrypt/live/{{ base_domain }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ base_domain }}/privkey.pem;
+    location / {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forward-Proto https;
+        proxy_set_header Host $host;
+        proxy_pass https://{{ nginx_local_proxy_ip }}$request_uri;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+}

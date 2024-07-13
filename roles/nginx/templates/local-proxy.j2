@@ -1,0 +1,89 @@
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Nginx local reverse-proxy
+#
+# This server accepts requests from ips defined in nginx_allowed_source_ips
+#
+# TODO:
+# - variablize config and use Ansible loops to template out each endpoint
+#
+# It forces https and uses certs for the {{ base_domain }} domain
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+# Redirect HTTP to HTTPS
+server{
+    {% for ip in nginx_allowed_source_ips %}
+    allow {{ ip }};
+    {% endfor %}
+    deny all;
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name wach.quest;
+    # this tells nginx to send http requests to https
+    return 301 https://$host$request_uri;
+}
+
+# home.{{ base_domain }}
+server {
+    {% for ip in nginx_allowed_source_ips %}
+    allow {{ ip }};
+    {% endfor %}
+    deny all;
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name home.{{ base_domain }};
+    ssl_certificate /etc/letsencrypt/live/{{ base_domain }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ base_domain }}/privkey.pem;
+    location / {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forward-Proto https;
+        proxy_set_header Host $host;
+        proxy_pass http://{{ nginx_domain_host_map.home }}:9000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+}
+
+# portainer.{{ base_domain }}
+server {
+    {% for ip in nginx_allowed_source_ips %}
+    allow {{ ip }};
+    {% endfor %}
+    deny all;
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name portainer.{{ base_domain }};
+    ssl_certificate /etc/letsencrypt/live/{{ base_domain }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ base_domain }}/privkey.pem;
+    location / {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forward-Proto https;
+        proxy_set_header Host $host;
+        proxy_pass http://{{ nginx_domain_host_map.portainer }}:9000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+}
+
+# uptime.{{ base_domain }}
+server {
+    {% for ip in nginx_allowed_source_ips %}
+    allow {{ ip }};
+    {% endfor %}
+    deny all;
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name uptime.{{ base_domain }};
+    ssl_certificate /etc/letsencrypt/live/{{ base_domain }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ base_domain }}/privkey.pem;
+    location / {
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forward-Proto https;
+        proxy_set_header Host $host;
+        proxy_pass http://{{ nginx_domain_host_map.uptime }}:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
+}

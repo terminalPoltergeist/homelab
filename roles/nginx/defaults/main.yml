@@ -1,2 +1,4 @@
 ---
 nginx_server_name: homelab
+nginx_allowed_source_ips:
+  - all
