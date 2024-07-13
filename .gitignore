@@ -9,3 +9,4 @@ roles/ssh/
 roles/users/
 roles/zsh/files/*
 !roles/zsh/files/*.md
+roles/ufw/
