@@ -1,4 +1,10 @@
 ---
+nginx_force_restart: false
 nginx_server_name: homelab
 nginx_allowed_source_ips:
   - all
+nginx_local_proxy_ip: 127.0.0.1
+nginx_domain_host_map:
+  home:
+    host: 192.168.0.2
+    port: 80

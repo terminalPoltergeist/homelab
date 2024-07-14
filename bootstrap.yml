@@ -1,5 +1,8 @@
-- name: bootstrap
+- name: bootstrap - all
   hosts: all
+  strategy: free
+  vars_files:
+    - globals.yml
   vars:
     ansible_python_interpreter: /usr/bin/python3
   roles:
@@ -24,11 +27,13 @@
     - role: python
       tags: python
 
-- name: bootstrap
+- name: bootstrap - networking
   hosts: networking
+  strategy: free
+  vars_files:
+    - globals.yml
   vars:
     ansible_python_interpreter: /usr/bin/python3
-
   roles:
     - role: tailscale
       tags: tailscale
@@ -44,3 +49,13 @@
     - role: ufw
       become: true
       tags: ufw
+
+- name: bootstrap - proxmox
+  hosts: proxmox
+  strategy: free
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  roles:
+    - role: guestconfig
+      become: true
+      tags: guestconfig

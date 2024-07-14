@@ -43,3 +43,14 @@ cloud:
   hosts:
     aristotle:
     brunelli:
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Proxmox VMs
+#
+# This group contains all hosts from Proxmox.
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+proxmox:
+  hosts:
+    moxy:
+    nassau:
+    oasis:

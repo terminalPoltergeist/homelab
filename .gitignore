@@ -1,3 +1,4 @@
+vars/
 group_vars/*.yml
 host_vars/*.yml
 roles/**/vars
