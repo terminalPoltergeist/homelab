@@ -1,7 +1,10 @@
+# ignore vars files
 vars/
 group_vars/*.yml
 host_vars/*.yml
+# ignore role vars, use default vars directory to show required vars for role
 roles/**/vars
+
 roles/nginx/files/*
 !roles/nginx/files/*.md
 roles/nvim/files/*
@@ -10,4 +13,3 @@ roles/ssh/
 roles/users/
 roles/zsh/files/*
 !roles/zsh/files/*.md
-roles/ufw/

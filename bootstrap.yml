@@ -27,9 +27,15 @@
     - role: python
       tags: python
 
+    - role: ufw
+      become: true
+      tags: ufw
+
 - name: bootstrap - networking
   hosts: networking
   strategy: free
+  tags:
+    - networking
   vars_files:
     - globals.yml
   vars:
@@ -53,6 +59,8 @@
 - name: bootstrap - proxmox
   hosts: proxmox
   strategy: free
+  tags:
+    - proxmox
   vars:
     ansible_python_interpreter: /usr/bin/python3
   roles:
