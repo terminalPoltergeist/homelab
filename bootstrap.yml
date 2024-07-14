@@ -3,8 +3,6 @@
   strategy: free
   vars_files:
     - globals.yml
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
   roles:
     - role: users
       become: true
@@ -38,8 +36,6 @@
     - networking
   vars_files:
     - globals.yml
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
   roles:
     - role: tailscale
       tags: tailscale
@@ -61,9 +57,19 @@
   strategy: free
   tags:
     - proxmox
-  vars:
-    ansible_python_interpreter: /usr/bin/python3
   roles:
     - role: guestconfig
       become: true
       tags: guestconfig
+
+- name: bootstrap - containers
+  hosts: containers
+  strategy: free
+  tags:
+    - containers
+  vars_files:
+    - globals.yml
+  roles:
+    - role: docker
+      become: true
+      tags: docker

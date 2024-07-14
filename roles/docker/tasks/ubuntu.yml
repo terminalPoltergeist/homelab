@@ -1,0 +1,30 @@
+- name: Uninstall Docker
+  when: docker_uninstall
+  block:
+    - name: Uninstall Docker
+      ansible.builtin.apt:
+        name:
+          - 'docker.io'
+          - 'docker-doc'
+          - 'docker-compose'
+          - 'podman-docker'
+          - 'containerd'
+          - 'runc'
+        state: absent
+
+    - name: Remove old Docker directory
+      ansible.builtin.file:
+        path: /var/lib/docker
+        state: absent
+        force: true
+
+    - name: Remove old containerd directory
+      ansible.builtin.file:
+        path: /var/lib/containerd
+        state: absent
+        force: true
+
+- name: Install Docker
+  ansible.builtin.apt:
+    name: docker
+    state: latest
