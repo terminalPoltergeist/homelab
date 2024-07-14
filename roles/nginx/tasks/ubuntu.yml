@@ -38,6 +38,7 @@
   notify: Restart nginx
 
 - name: Ensure the server is started
+  when: test.rc == 0
   ansible.builtin.service:
     name: nginx
     state: started
