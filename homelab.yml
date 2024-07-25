@@ -20,6 +20,7 @@ containers:
     carlyle:
     nassau:
     oasis:
+    pisco:
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # on-prem infrastructure
@@ -32,6 +33,7 @@ on_prem:
     moxy:
     nassau:
     oasis:
+    pisco:
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # cloud infrastructure
@@ -53,3 +55,4 @@ proxmox:
     moxy:
     nassau:
     oasis:
+    pisco:

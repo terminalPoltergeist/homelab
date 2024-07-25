@@ -1,3 +1,16 @@
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# This playbook defines plays for bootstrapping the environments
+# of all host groups.
+#
+# It does not deploy any applications.
+#
+# It sets up user environments, creature-comforts,
+# basic security, and networking policies.
+#
+# Run it against all hosts with:
+# ansible-playbook bootstrap.yml -i homelab.yml
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+---
 - name: bootstrap - all
   hosts: all
   strategy: free
@@ -40,14 +53,6 @@
     - role: tailscale
       tags: tailscale
 
-    - role: certbot
-      become: true
-      tags: certbot
-
-    - role: nginx
-      become: true
-      tags: nginx
-
     - role: ufw
       become: true
       tags: ufw
@@ -73,3 +78,7 @@
     - role: docker
       become: true
       tags: docker
+
+    - role: portainer-agent
+      become: true
+      tags: portainer-agent

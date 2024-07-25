@@ -1,0 +1,30 @@
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# This playbook defines plays for managing services.
+#
+# Run it against all hosts with:
+# ansible-playbook services.yml -i homelab.yml
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+---
+- name: Network services
+  hosts: networking
+  tags:
+    - networking
+  vars_files:
+    - globals.yml
+  roles:
+    - role: certbot
+      become: true
+      tags: certbot
+
+    - role: nginx
+      become: true
+      tags: nginx
+
+- name: Pisco services
+  hosts: pisco
+  tags:
+    - containers
+  roles:
+    - role: owncloud
+      become: true
+      tags: owncloud
