@@ -24,7 +24,38 @@
         state: absent
         force: true
 
+- name: Setup Docker repository
+  ansible.builtin.shell: |
+    sudo apt-get update
+    sudo apt-get install ca-certificates curl
+    sudo install -m 0755 -d /etc/apt/keyrings
+    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+    sudo chmod a+r /etc/apt/keyrings/docker.asc
+    echo \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+      $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+      sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
 - name: Install Docker
   ansible.builtin.apt:
-    name: docker
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - docker-compose
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
     state: latest
+    update_cache: true
+  notify: Restart docker
+
+- name: Install python Docker package
+  ansible.builtin.apt:
+    name: python3-docker
+
+- name: Add jack to Docker group
+  ansible.builtin.user:
+    name: jack
+    groups: docker
+    append: true
+    state: present

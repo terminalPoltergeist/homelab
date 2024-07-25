@@ -45,6 +45,12 @@
       ansible.builtin.shell:
         cmd: cd /tmp/python3.11.3 && make
 
+- name: Install pip
+  ansible.builtin.apt:
+    name: python3-pip
+    state: latest
+  become: true
+
 - name: Check for pyenv
   ansible.builtin.shell:
     cmd: pyenv --version
