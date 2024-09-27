@@ -28,3 +28,11 @@
     - role: owncloud
       become: true
       tags: owncloud
+
+- name: Cosa services
+  hosts: cosa
+  vars_files:
+    - globals.yml
+  roles:
+    - role: owncloud
+      become: true
