@@ -1,6 +1,20 @@
 - name: Uninstall Docker
   when: docker_uninstall
   block:
+    - name: Get running containers
+      community.docker.docker_host_info:
+        containers: true
+      register: docker_info
+      failed_when: false
+
+    - name: Stop running containers
+      when: docker_info.changed
+      community.docker.docker_container:
+        name: '{{ item.Names.0[1:] }}'
+        image: '{{ item.Image }}'
+        state: stopped
+      loop: "{{ docker_info.containers | map(attribute='Id') | list }}"
+
     - name: Uninstall Docker
       ansible.builtin.apt:
         name:
@@ -11,6 +25,11 @@
           - 'containerd'
           - 'runc'
         state: absent
+
+    - name: Unmount docker directory
+      ansible.posix.mount:
+        path: /var/lib/docker
+        state: unmounted
 
     - name: Remove old Docker directory
       ansible.builtin.file:
