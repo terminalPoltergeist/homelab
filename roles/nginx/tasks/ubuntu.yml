@@ -1,12 +1,16 @@
 - name: Install nginx
   ansible.builtin.apt:
+    # name: "nginx={{ packages['nginx']['version'] }}"
     name: nginx
-    state: latest
+    state: present
+    update_cache: true
+    allow_downgrade: true
 
 - name: Copy nginx config
   ansible.builtin.copy:
     src: "{{ role_path }}/files/nginx.conf"
     dest: "/etc/nginx/nginx.conf"
+    owner: 'root'
     mode: '0644'
 
 - name: Delete default server
@@ -15,14 +19,14 @@
     state: absent
     force: true
 
-- name: Build server configs
+- name: Build server config
   ansible.builtin.template:
     src: "{{ nginx_server_name }}.j2"
     dest: "/etc/nginx/sites-available/{{ nginx_server_name }}"
     mode: '0644'
   register: nginx
 
-- name: Link server to enabled sites
+- name: Enable the server
   ansible.builtin.file:
     src: "/etc/nginx/sites-available/{{ nginx_server_name }}"
     dest: "/etc/nginx/sites-enabled/{{ nginx_server_name }}"
