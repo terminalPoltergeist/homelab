@@ -5,6 +5,8 @@ host_vars/*.yml
 # ignore role vars, use default vars directory to show required vars for role
 roles/**/vars
 
+notes.md
+
 roles/nginx/files/*
 !roles/nginx/files/*.md
 roles/nvim/files/*
