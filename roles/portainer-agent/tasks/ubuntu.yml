@@ -1,0 +1,11 @@
+- name: Start Portainer agent
+  community.docker.docker_container:
+    name: portainer_agent
+    image: portainer/agent:2.19.5
+    state: started
+    restart_policy: always
+    ports:
+      - 9001:9001
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/liv/docker/volumes
