@@ -29,8 +29,8 @@
       become: true
       tags: owncloud
 
-- name: Cosa services
-  hosts: cosa
+- name: Odin services
+  hosts: odin
   vars_files:
     - globals.yml
   roles:
