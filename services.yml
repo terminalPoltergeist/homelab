@@ -20,14 +20,14 @@
       become: true
       tags: nginx
 
-- name: Pisco services
-  hosts: pisco
-  tags:
-    - containers
-  roles:
-    - role: owncloud
-      become: true
-      tags: owncloud
+# - name: Pisco services
+#   hosts: pisco
+#   tags:
+#     - containers
+#   roles:
+#     - role: owncloud
+#       become: true
+#       tags: owncloud
 
 - name: Odin services
   hosts: odin
